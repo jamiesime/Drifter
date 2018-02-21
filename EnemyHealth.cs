@@ -37,6 +37,7 @@ public class EnemyHealth : MonoBehaviour {
 
 	public void killSequence(){
 		Destroy(this.gameObject);
+		EnemySpawner.control.enemies.Remove(this.gameObject);
 	}
 
 	public void applyDamage(int amount){
