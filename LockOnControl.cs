@@ -9,43 +9,63 @@ public class LockOnControl : MonoBehaviour {
 	public Transform currentTarget;
 	public Vector3 currentTargetScreenPos;
 
+	public int targetNumber;
+
 	public bool lockedOn;
 
+	public List<GameObject> targets;
 	public List<GameObject> availableTargets;
 	public List<GameObject> targetsInView;
 
 	// Use this for initialization
 	void Start () {
-		
+		targetNumber = -1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 		if(EnemySpawner.control.enemies.Count > 0){
-			List<GameObject> targets = searchForTargetsInRange(EnemySpawner.control.enemies);
+			targets = searchForTargetsInRange(EnemySpawner.control.enemies);
 
 			if(Input.GetButtonDown("LockOn")){
-				if(!lockedOn){
-					if(targets.Count > 0){
-						currentTarget = targets[0].transform;
-						Behaviour halo = (Behaviour)targets[0].GetComponent("Halo");
-						halo.enabled = true; // false
-						currentTargetScreenPos = cam.WorldToScreenPoint(targets[0].transform.position);
-						lockedOn = true;
-					}
-				}
-				else {
-					lockedOn = false;
-				}
+				lockOnToTarget(targets);
+			}
+
+			if(Input.GetButtonDown("LockOff")){
+				lockedOn = false;
 			}
 
 			if(lockedOn){
-				// player.transform.LookAt(targets[0].transform.position);
-				player.transform.rotation = Quaternion.Lerp(player.transform.rotation, Quaternion.LookRotation(targets[0].transform.position), Time.deltaTime * 10f);
+				if(currentTarget != null){
+					Quaternion targetRotation = Quaternion.LookRotation(currentTarget.transform.position - player.transform.position);
+					player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, 10f * Time.deltaTime);
+				}
 			}
 		}
-	}
+
+	}	
+
+
+
+	public void lockOnToTarget(List<GameObject> targets){
+			if(targets.Count > 0){
+				if(targetNumber < targets.Count -1){
+				Debug.Log(targets.Count);
+				targetNumber += 1;
+				}
+				else{
+					targetNumber = 0;
+					lockedOn = false;
+				}
+
+				currentTarget = targets[targetNumber].transform;
+				Behaviour halo = (Behaviour)targets[targetNumber].GetComponent("Halo");
+				halo.enabled = true; // false
+				currentTargetScreenPos = cam.WorldToScreenPoint(targets[targetNumber].transform.position);
+				lockedOn = true;
+			}
+		}
 
 
 	public List<GameObject> populateTargetList(){

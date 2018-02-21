@@ -90,7 +90,6 @@ public class PodControl : MonoBehaviour {
 	public float getMousePosition(string axis){
 		int deadZone = 200;
 		Vector3 mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-		Debug.Log(mousePos);
 
 		if(axis == "x"){
 			if(mousePos.x > 0.6f){
