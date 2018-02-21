@@ -7,6 +7,14 @@ public class BulletBehaviour : MonoBehaviour {
 
 	public float destroyTime;
 
+	void OnCollisionEnter(Collision other){
+		if(other.gameObject.tag == "Enemy"){
+			other.gameObject.SendMessage("applyDamage", 1);
+			Destroy(this.gameObject);
+		}
+	}
+
+
 	// Use this for initialization
 	void Start () {
 		this.transform.parent = null;

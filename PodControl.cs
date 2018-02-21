@@ -36,29 +36,23 @@ public class PodControl : MonoBehaviour {
 	}
 
 	public void handleRotationInput(){
-		float horInput = Input.GetAxis("Horizontal");
-		float vertInput = Input.GetAxis("Vertical");
+		float horInput = Input.GetAxis("Horizontal") + getMousePosition("x");
+		float vertInput = Input.GetAxis("Vertical") + getMousePosition("y");
 
 		float noRot = 0f;
-		float maxRot = 50f;
+		float maxRot = 70f;
 
-		if(horInput > 0.5f){
-			horRotSpeed = Mathf.Lerp(horRotSpeed, maxRot, Time.deltaTime * rotSmooth);
+		if(horInput != 0f){
+			horRotSpeed = Mathf.Lerp(horRotSpeed, maxRot * horInput, Time.deltaTime * rotSmooth);
 		}
-		if(horInput < -0.5f){
-			horRotSpeed = Mathf.Lerp(horRotSpeed, -maxRot, Time.deltaTime * rotSmooth);
-		}
-		if(horInput == 0f){
+		else{
 			horRotSpeed = Mathf.Lerp(horRotSpeed, noRot, Time.deltaTime * (rotSmooth / 2));
 		}
 
-		if(vertInput > 0.5f){
-			vertRotSpeed = Mathf.Lerp(vertRotSpeed, -maxRot, Time.deltaTime * rotSmooth);
+		if(vertInput != 0f){
+			vertRotSpeed = Mathf.Lerp(vertRotSpeed, maxRot * -vertInput, Time.deltaTime * rotSmooth);
 		}
-		if(vertInput < -0.5f){
-			vertRotSpeed = Mathf.Lerp(vertRotSpeed, maxRot, Time.deltaTime * rotSmooth);
-		}
-		if(vertInput == 0f){
+		else{
 			vertRotSpeed = Mathf.Lerp(vertRotSpeed, noRot, Time.deltaTime * (rotSmooth / 2));
 		}
 
@@ -77,5 +71,28 @@ public class PodControl : MonoBehaviour {
 		}
 
 		player.transform.Translate(Vector3.forward * moveSpeed, Space.Self);
+	}
+
+	public float getMousePosition(string axis){
+		int deadZone = 200;
+		if(axis == "x"){
+				if(Input.mousePosition.x > Screen.width / 2 + deadZone){
+					return 0.6f;
+				}
+				if(Input.mousePosition.x < Screen.width / 2 - deadZone){
+					return -0.6f;
+				}
+			return 0f;
+		}
+		if(axis == "y"){
+				if(Input.mousePosition.y > Screen.height / 2 + deadZone){
+					return 0.6f;
+				}
+				if(Input.mousePosition.y < Screen.height / 2 - deadZone){
+					return -0.6f;
+				}
+			return 0f;
+		}
+		return 0f;
 	}
 }
