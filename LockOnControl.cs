@@ -9,6 +9,8 @@ public class LockOnControl : MonoBehaviour {
 	public Transform currentTarget;
 	public Vector3 currentTargetScreenPos;
 
+	public bool lockedOn;
+
 	public List<GameObject> availableTargets;
 	public List<GameObject> targetsInView;
 
@@ -24,13 +26,23 @@ public class LockOnControl : MonoBehaviour {
 			List<GameObject> targets = searchForTargetsInRange(EnemySpawner.control.enemies);
 
 			if(Input.GetButtonDown("LockOn")){
-				if(targets.Count > 0){
-					currentTarget = targets[0].transform;
-					Behaviour halo = (Behaviour)targets[0].GetComponent("Halo");
-					halo.enabled = true; // false
-					currentTargetScreenPos = cam.WorldToScreenPoint(targets[0].transform.position);
-					player.transform.LookAt(targets[0].transform.position);
+				if(!lockedOn){
+					if(targets.Count > 0){
+						currentTarget = targets[0].transform;
+						Behaviour halo = (Behaviour)targets[0].GetComponent("Halo");
+						halo.enabled = true; // false
+						currentTargetScreenPos = cam.WorldToScreenPoint(targets[0].transform.position);
+						lockedOn = true;
+					}
 				}
+				else {
+					lockedOn = false;
+				}
+			}
+
+			if(lockedOn){
+				// player.transform.LookAt(targets[0].transform.position);
+				player.transform.rotation = Quaternion.Lerp(player.transform.rotation, Quaternion.LookRotation(targets[0].transform.position), Time.deltaTime * 10f);
 			}
 		}
 	}
@@ -59,6 +71,10 @@ public class LockOnControl : MonoBehaviour {
 			}
 			}
 		return targetsInView;
+	}
+
+	public void removeKilledEnemy(GameObject killedEnemy){
+		targetsInView.Remove(killedEnemy);
 	}
 		
 }
