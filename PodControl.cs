@@ -7,6 +7,9 @@ public class PodControl : MonoBehaviour {
 
 	public GameObject player;
 
+	// just to initialise
+	public Vector3 dir;
+
 	// assigned in inspector
 	public float maxMoveSpeed;
 	public float moveSpeed;
@@ -63,15 +66,24 @@ public class PodControl : MonoBehaviour {
 	public void handleMovementInput(){
 
 		bool moveInput = Input.GetButton("Move");
+		bool reverseInput = Input.GetButton("Reverse");
 
-		if(moveInput){
+		if(moveInput || reverseInput){
 			moveSpeed = Mathf.Lerp(moveSpeed, maxMoveSpeed, Time.deltaTime * moveSmooth);
 		}
 		else{
 			moveSpeed = Mathf.Lerp(moveSpeed, 0f, Time.deltaTime * moveSmooth);
 		}
 
-		player.transform.Translate(Vector3.forward * moveSpeed, Space.Self);
+		if(moveInput){
+			dir = Vector3.forward;
+		}
+
+		if(reverseInput){
+			dir = Vector3.back;
+		}
+
+		player.transform.Translate(dir * moveSpeed, Space.Self);
 	}
 
 
