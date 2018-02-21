@@ -20,10 +20,11 @@ public class Weapons : MonoBehaviour {
 	}
 
 	public void handleSmallCannon(){
-		bool rightFire = Input.GetButton("RightFire");
+		bool rightFireKey = Input.GetButton("RightFire");
+		float rightFireTrigger = Input.GetAxis("RightFire");
 		Vector3 rightAmmoSpawnPos = new Vector3(smallCannon.transform.position.x, smallCannon.transform.position.y, smallCannon.transform.position.z);
 
-		if(rightFire){
+		if(rightFireKey || rightFireTrigger > 0.5f){
 
 			if(firePeriod == 0f){
 				GameObject newBullet = Instantiate(smallShell, rightAmmoSpawnPos, transform.rotation);

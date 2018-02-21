@@ -59,6 +59,7 @@ public class PodControl : MonoBehaviour {
 		player.transform.Rotate(Time.deltaTime * vertRotSpeed, Time.deltaTime * horRotSpeed, 0, Space.Self);	
 	}
 
+
 	public void handleMovementInput(){
 
 		bool moveInput = Input.GetButton("Move");
@@ -73,25 +74,29 @@ public class PodControl : MonoBehaviour {
 		player.transform.Translate(Vector3.forward * moveSpeed, Space.Self);
 	}
 
+
 	public float getMousePosition(string axis){
 		int deadZone = 200;
+		Vector3 mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+		Debug.Log(mousePos);
+
 		if(axis == "x"){
-				if(Input.mousePosition.x > Screen.width / 2 + deadZone){
-					return 0.6f;
-				}
-				if(Input.mousePosition.x < Screen.width / 2 - deadZone){
-					return -0.6f;
-				}
-			return 0f;
+			if(mousePos.x > 0.6f){
+				return mousePos.x;
+			}
+			if(mousePos.x < 0.4f){
+				float invertedPos = (mousePos.x - 1);
+				return invertedPos;
+			}
 		}
 		if(axis == "y"){
-				if(Input.mousePosition.y > Screen.height / 2 + deadZone){
-					return 0.6f;
-				}
-				if(Input.mousePosition.y < Screen.height / 2 - deadZone){
-					return -0.6f;
-				}
-			return 0f;
+			if(mousePos.y > 0.6f){
+				return mousePos.y;
+			}
+			if(mousePos.y < 0.4f){
+				float invertedPos = (mousePos.y - 1);
+				return invertedPos;
+			}
 		}
 		return 0f;
 	}
