@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,6 +22,11 @@ public class PodControl : MonoBehaviour {
 	public float rotSmooth;
 	public float moveSmooth;
 
+	// used to only flip once at a time
+	public bool flipping;
+	// stores target value of lerp when flipping
+	public float currentDir;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -35,6 +40,9 @@ public class PodControl : MonoBehaviour {
 
 		// gets space key input and applies forward movement
 		handleMovementInput();
+
+		// listens for flip direction input and inverts player rotation on button down
+		handleFlipDirection();
 		
 	}
 
@@ -84,6 +92,35 @@ public class PodControl : MonoBehaviour {
 		}
 
 		player.transform.Translate(dir * moveSpeed, Space.Self);
+	}
+
+	public void handleFlipDirection(){
+		bool flipInput = Input.GetButtonDown("Flip");
+		float duration = (10f * Time.deltaTime);
+
+		if(flipInput && !flipping){
+			StartCoroutine(setRotator(new Vector3(0f, 180f, 0f), 0.5f));
+			flipping = true;
+		}
+
+		if(flipping){
+			flipping = false;
+		}
+	}
+
+	IEnumerator setRotator(Vector3 byAngles, float inTime) {
+           Quaternion fromAngle = player.transform.rotation;
+           Quaternion toAngle = Quaternion.Euler(transform.eulerAngles + byAngles);
+           for(float t = 0f; t < 1; t += Time.deltaTime/inTime) {
+                player.transform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
+                yield return null;
+           }
+      }
+
+	IEnumerator endFlip(){
+		yield return new WaitForSeconds(1f);
+		// flippedRotation = new Quaternion (0f,0f,0f,0f);
+		flipping = false;
 	}
 
 
