@@ -12,6 +12,10 @@ public class BulletBehaviour : MonoBehaviour {
 			other.gameObject.SendMessage("applyDamage", 1);
 			Destroy(this.gameObject);
 		}
+		if(other.gameObject.tag == "Player"){
+			other.gameObject.SendMessage("applyDamage", Random.Range(0.3f, 1.5f));
+			Destroy(this.gameObject);
+		}
 	}
 
 
