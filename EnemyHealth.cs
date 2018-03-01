@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour {
 
+	public GameObject parentOfGroup;
 	public int health;
 	public bool hitDetected;
 
@@ -36,9 +37,16 @@ public class EnemyHealth : MonoBehaviour {
 
 
 	public void killSequence(){
-		Destroy(this.gameObject);
-		EnemySpawner.control.enemies.Remove(this.gameObject);
-		GameObject.Find("Player").SendMessage("removeKilledEnemy", this.gameObject);
+		if(parentOfGroup == null){
+			Destroy(this.gameObject);
+			EnemySpawner.control.enemies.Remove(this.gameObject);
+			GameObject.Find("Player").SendMessage("removeKilledEnemy", this.gameObject);
+		}
+		else{
+			Destroy(parentOfGroup);
+			EnemySpawner.control.enemies.Remove(this.gameObject);
+			GameObject.Find("Player").SendMessage("removeKilledEnemy", parentOfGroup);
+		}
 	}
 
 	public void applyDamage(int amount){
