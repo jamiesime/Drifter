@@ -51,7 +51,6 @@ public class LockOnControl : MonoBehaviour {
 	public void lockOnToTarget(List<GameObject> targets){
 			if(targets.Count > 0){
 				if(targetNumber < targets.Count -1){
-				Debug.Log(targets.Count);
 				targetNumber += 1;
 				}
 				else{

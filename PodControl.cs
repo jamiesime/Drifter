@@ -117,12 +117,6 @@ public class PodControl : MonoBehaviour {
            }
       }
 
-	IEnumerator endFlip(){
-		yield return new WaitForSeconds(1f);
-		// flippedRotation = new Quaternion (0f,0f,0f,0f);
-		flipping = false;
-	}
-
 
 	public float getMousePosition(string axis){
 		int deadZone = 200;
